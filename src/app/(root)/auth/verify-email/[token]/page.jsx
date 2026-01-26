@@ -27,7 +27,7 @@ const page = ({ params }) => {
     verify();
   }, [token]);
   return (
-    <Card className="w-[400px]">
+    <Card className="w-100">
       <CardContent>
         {isVerified ==1 ? (
           <div>

@@ -21,6 +21,7 @@ import { Eye, EyeClosed } from "lucide-react";
 import z from "zod";
 import Link from "next/link";
 import { WEBSITE_LOGIN, WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import { showToast } from "@/lib/showToast";
 
 const Register = () => {
   const [loading, setLoading] = React.useState(false);
@@ -58,11 +59,11 @@ const Register = () => {
         throw new Error(registerResponse.message)
       }
       form.reset()
-      alert(registerResponse.message)
+      showToast('success', registerResponse.message)
     } catch (error) {
-      alert(error.message)
+      showToast('error', error.message)
     }finally{
-      setLoading(false);
+      setLoading(false);  
     }
   };
 

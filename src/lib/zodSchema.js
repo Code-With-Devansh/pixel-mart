@@ -9,5 +9,9 @@ export const authSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(64, "Password must be at most 64 characters")
-    .regex(/[0-9]/, "Must include at least one number")
+    .regex(/[0-9]/, "Must include at least one number"),
+
+  otp:z
+    .string()
+    .regex(/^\d{6}$/, "OTP must be a 6-digit number"),
 });

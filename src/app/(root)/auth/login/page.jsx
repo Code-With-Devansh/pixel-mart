@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import logo from "$/public/assets/images/logo-black.png";
 
 import { useForm, Controller } from "react-hook-form";
@@ -22,10 +22,15 @@ import { Eye, EyeClosed } from "lucide-react";
 import z from "zod";
 import Link from "next/link";
 import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import axios from "axios";
+import { showToast } from "@/lib/showToast";
+import OTPVerification from "@/components/application/OTPVerification";
 
 const LoginPage = () => {
   const [loading, setLoading] = React.useState(false);
+  const [OTPVerificationLoading, setOTPVerificationLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = React.useState(false);
+  const [otpEmail, setOtpEmail] = useState("")
   const formSchema = authSchema
     .pick({
       email: true,
@@ -41,21 +46,47 @@ const LoginPage = () => {
       password: "",
     },
   });
-
-  const onSubmit = async (data) => {
-    setLoading(true);
-    console.log("Form Data:", data);
-    setLoading(false);
+  const onSubmit = async (values) => {
+    try {
+      setLoading(true);
+      const {data: loginResponse} = await axios.post('/api/auth/login', values);
+      if(!loginResponse.success){
+        throw new Error(loginResponse.message)
+      }
+      setOtpEmail(values.email)
+      form.reset()
+      showToast('success',loginResponse.message)
+    } catch (error) {
+      showToast('error',error.message)
+    }finally{
+      setLoading(false);
+    }
   };
-
+  //Otp verification
+  const handleOtpVerification = async (values)=>{
+    try {
+      setOTPVerificationLoading(true);
+      const {data: otpVerificationResponse} = await axios.post('/api/auth/verify-otp', values);
+      if(!otpVerificationResponse.success){
+        throw new Error(otpVerificationResponse.message)
+      }
+      setOtpEmail('')
+      showToast('success',otpVerificationResponse.message)
+    } catch (error) {
+      showToast('error',error.message)
+    }finally{
+      setOTPVerificationLoading(false);
+    }
+  }
   return (
     <Card className="w-112.5">
       <CardContent className="space-y-6">
         <div className="flex justify-center">
           <Image src={logo} alt="logo" className="max-w-37.5" />
         </div>
-
-        <div className="text-center">
+      {!otpEmail
+      ?
+      <><div className="text-center">
           <h1 className="text-3xl font-bold">Login Into Account</h1>
           <p className="text-muted-foreground">
             Login into your account by filling out the form below.
@@ -152,7 +183,13 @@ const LoginPage = () => {
               </p>
             </div>
           </form>
-        </div>
+        </div></>
+      :
+      <>
+      <OTPVerification loading={OTPVerificationLoading} setOtpEmail={setOtpEmail} onSubmit={handleOtpVerification} email={otpEmail} />
+      </>
+      }
+        
       </CardContent>
     </Card>
   );

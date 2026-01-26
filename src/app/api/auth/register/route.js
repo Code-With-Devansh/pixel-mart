@@ -48,7 +48,7 @@ export async function POST(req){
 
         // sending verification link to mail
         await sendMail('Email Verification request from Pixel Mart', email, emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`))
-        return response(true, 200, "Registration Success, Please verify your email address.")
+        return response(true, 200, "Registration Success, Please verify your email address. We have sent a verification link to your registered email address.")
     } catch (error) {
         return catchError(error);
     }
