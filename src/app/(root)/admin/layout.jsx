@@ -1,9 +1,14 @@
-import React from 'react'
+import { SidebarProvider } from "@/components/ui/sidebar"
+import React from "react";
+import AppSideBar from "@/components/application/admin/AppSideBar";
 
-const layout = ({children}) => {
+const layout = ({ children }) => {
   return (
-    <div>{children}</div>
-  )
-}
+      <SidebarProvider>
+        <AppSideBar/>
+        <main>{children}</main>
+      </SidebarProvider>
+  );
+};
 
-export default layout
+export default layout;
