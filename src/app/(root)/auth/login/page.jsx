@@ -21,12 +21,19 @@ import ButtonLoading from "@/components/application/ButtonLoading";
 import { Eye, EyeClosed } from "lucide-react";
 import z from "zod";
 import Link from "next/link";
-import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import { WEBSITE_HOME, WEBSITE_REGISTER, WEBSITE_RESET_PASSWORD } from "@/routes/WebsiteRoute";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
 import OTPVerification from "@/components/application/OTPVerification";
+import {useDispatch} from 'react-redux';
+import { login } from "@/store/reducer/authReducer";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ADMIN_DASHBOARD } from "@/routes/AdminPanelRoute";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const dispatch = useDispatch()
   const [loading, setLoading] = React.useState(false);
   const [OTPVerificationLoading, setOTPVerificationLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = React.useState(false);
@@ -56,6 +63,7 @@ const LoginPage = () => {
       setOtpEmail(values.email)
       form.reset()
       showToast('success',loginResponse.message)
+      
     } catch (error) {
       showToast('error',error.message)
     }finally{
@@ -72,6 +80,17 @@ const LoginPage = () => {
       }
       setOtpEmail('')
       showToast('success',otpVerificationResponse.message)
+      dispatch(login(otpVerificationResponse.data));
+      if(searchParams.has('callback')){
+        console.log('callback');
+        router.push(searchParams.get('callback'));
+      }else{
+        console.log("OTP response data:", otpVerificationResponse.data);
+console.log("Role:", otpVerificationResponse.data?.role);
+
+        const url = otpVerificationResponse.data.role === 'admin'?ADMIN_DASHBOARD:WEBSITE_HOME
+        router.push(url);
+      }
     } catch (error) {
       showToast('error',error.message)
     }finally{
@@ -175,7 +194,7 @@ const LoginPage = () => {
               <p className="mt-3">
                 {" "}
                 <Link
-                  href="/auth/register"
+                  href={WEBSITE_RESET_PASSWORD}
                   className="text-blue-700 hover:underline"
                 >
                   Forgot Password?

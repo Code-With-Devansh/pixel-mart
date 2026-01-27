@@ -76,7 +76,9 @@ export async function POST(req) {
         validatedData.error,
       );
     }
-
+    if(getUser.role ==='admin'){
+      return response(true, 200, 'Please Enter the Admin Login Code.');
+    }
     //OTP Generation
     await OTPModel.deleteMany({email}); // deleting old otps
     const otp = generateOTP();
