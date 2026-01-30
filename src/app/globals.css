@@ -115,6 +115,19 @@
 }
 
 @layer base {
+  html {
+    overflow-y: scroll;
+  }
+  
+  @supports (scrollbar-gutter: stable) {
+    html {
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+    }
+  }
+}
+
+@layer base {
   * {
     @apply border-border outline-ring/50;
   }

@@ -6,7 +6,7 @@ import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authSchema } from "@/lib/zodSchema";
-
+import darkLogo from '$/public/assets/images/logo-white.png'
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Field,
@@ -71,7 +71,8 @@ const Register = () => {
     <Card className="w-112.5">
       <CardContent className="space-y-6">
         <div className="flex justify-center">
-          <Image src={logo} alt="logo" className="max-w-37.5" />
+          <Image src={logo} alt="logo" className="max-w-37.5 dark:hidden" />
+          <Image src={darkLogo} alt="logo"  className="max-w-37.5 hidden dark:block"/>
         </div>
 
         <div className="text-center">

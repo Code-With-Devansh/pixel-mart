@@ -28,7 +28,7 @@ import {useDispatch} from 'react-redux';
 import { login } from "@/store/reducer/authReducer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ADMIN_DASHBOARD } from "@/routes/AdminPanelRoute";
-
+import darkLogo from '$/public/assets/images/logo-white.png'
 const LoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -100,7 +100,8 @@ console.log("Role:", otpVerificationResponse.data?.role);
     <Card className="w-112.5">
       <CardContent className="space-y-6">
         <div className="flex justify-center">
-          <Image src={logo} alt="logo" className="max-w-37.5" />
+          <Image src={logo} alt="logo" className="max-w-37.5 dark:hidden" />
+          <Image src={darkLogo} alt="logo"  className="max-w-37.5 hidden dark:block"/>
         </div>
       {!otpEmail
       ?

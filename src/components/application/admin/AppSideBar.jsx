@@ -14,6 +14,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { LuChevronRight } from "react-icons/lu";
 import { IoMdClose } from "react-icons/io";
@@ -26,17 +27,16 @@ import { adminAppSidebarMenu } from '@/lib/adminSidebarMenu';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import Link from 'next/link';
 const AppSideBar = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const {toggleSidebar} = useSidebar();
   return (
-    <Sidebar>
+    <Sidebar className='z-50'>
       <SidebarHeader className='border-b h-14 p-0'>
         <div className='flex justify-between items-center px-4'>
-            {isDarkMode?
                 <Image src={logoWhite.src} height={logoWhite.height} width={logoWhite.width} className='hidden dark:block h-12.5 w-auto' alt='logo-white'/>
-                :
+                
                 <Image src={logoBlack.src} height={logoBlack.height} width={logoBlack.width} className='block dark:hidden h-12.5 w-auto' alt='logo-dark'/>
-            }
-            <Button type="button" size='icon' className='md:hidden'>
+          
+            <Button type="button" size='icon' className='md:hidden' onClick={toggleSidebar}>
                 <IoMdClose/>
             </Button>
 
