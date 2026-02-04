@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,23 +7,30 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-const BreadCrumb = ({breadCrumbData}) => {
+} from "@/components/ui/breadcrumb";
+const BreadCrumb = ({ breadCrumbData }) => {
   return (
     <Breadcrumb className="mb-5">
-  <BreadcrumbList>
-  {breadCrumbData && breadCrumbData.length>0 && breadCrumbData.map((data, index)=>{
-    return (<>
-        <BreadcrumbItem>
-      <BreadcrumbLink href={data.href} key={index} >{data.label}</BreadcrumbLink>
-    </BreadcrumbItem>
-    {(index != breadCrumbData.length-1) && <BreadcrumbSeparator className='mt-1'/>}</>
-    )
-  })}
-    
-  </BreadcrumbList>
-</Breadcrumb>
-  )
-}
+      <BreadcrumbList>
+        {breadCrumbData &&
+          breadCrumbData.length > 0 &&
+          breadCrumbData.map((data, index) => {
+            return (
+              <div key={index} className="flex">
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={data.href}>
+                    {data.label}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {index != breadCrumbData.length - 1 && (
+                  <BreadcrumbSeparator className="mt-1 ml-3" />
+                )}
+              </div>
+            );
+          })}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+};
 
-export default BreadCrumb
+export default BreadCrumb;

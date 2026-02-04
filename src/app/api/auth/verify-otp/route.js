@@ -25,27 +25,22 @@ export async function POST(req) {
     }
     const { email, otp } = validatedData.data;
     const getUser = await UserModel.findOne({ deletedAt: null, email }).lean();
-    if (getUser.role === "admin") {
-      const loggedInUserData = {
-        _id: getUser._id,
-        role: getUser.role,
-        name: getUser.name,
-        avatar: getUser.avatar,
-      };
-      if (otp === process.env.ADMIN_CODE) {
-        return response(true, 200, "Login Successful.", loggedInUserData);
-      } else {
-        return response(false, 401, "wrong admin code");
-      }
-    }
-    const getOtpData = await OTPModel.findOne({ email, otp });
-    if (!getOtpData) {
-      return response(false, 401, "invalid or expired otp.");
-    }
     if (!getUser) {
       return response(false, 401, "invalid or expired otp.");
     }
-    const loggedInUserData = {
+    let loggedInUserData = {};
+    if (getUser.role === "admin"){
+      if (otp !== process.env.ADMIN_CODE) {
+        return response(false, 401, "wrong admin code");
+      }
+    }else{
+      const getOtpData = await OTPModel.findOne({ email, otp });
+      if (!getOtpData) {
+        return response(false, 401, "invalid or expired otp.");
+      }
+      await getOtpData.deleteOne();
+    }
+    loggedInUserData = {
       _id: getUser._id,
       role: getUser.role,
       name: getUser.name,
@@ -67,8 +62,7 @@ export async function POST(req) {
       sameSite: "lax",
     });
 
-    //remove otp after validation
-    await getOtpData.deleteOne();
+
     return response(true, 200, "Login Successfull.", loggedInUserData);
   } catch (e) {
     return catchError(e);

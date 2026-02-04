@@ -9,6 +9,6 @@ export async function POST(req){
         cookieStore.delete('access_token');
         return response(true, 200, 'Logout Successful');
     } catch (error) {
-        catchError(error);
+        return catchError(error);
     }
 }
