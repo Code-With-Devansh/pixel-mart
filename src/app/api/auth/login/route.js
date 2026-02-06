@@ -44,7 +44,7 @@ export async function POST(req) {
       );
     }
 
-    if (!getUser.eisEmailVrified) {
+    if (!getUser.isEmailVerified) {
       // send email verification link.
       const secret = new TextEncoder().encode(process.env.SECRET_KEY);
       const token = await new SignJWT({ userId: getUser._id.toString() })

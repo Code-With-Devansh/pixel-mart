@@ -16,7 +16,12 @@ const MediaPage = () => {
     <BreadCrumb breadCrumbData={breadCrumbData}/>
     <Card>
       <CardHeader>
-        <div className='flex justify-between items-center'></div>
+        <div className='flex justify-between items-center'>
+          <h4 className='font-semibold text-xl uppercase'>Media</h4>
+          <div className='flex text-center gap-5'>
+            <UploadMedia/>
+          </div>
+        </div>
       </CardHeader>
     </Card>
     </>
