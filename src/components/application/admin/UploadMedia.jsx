@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import {FiPlus} from 'react-icons/fi'
 import { showToast } from "@/lib/showToast";
 import axios from "axios";
-const UploadMedia = ({isMultiple}) => {
+const UploadMedia = ({isMultiple, queryClient}) => {
     const handleOnError = ()=>{
         showToast('error', error.statusText);
     }
@@ -26,6 +26,7 @@ const UploadMedia = ({isMultiple}) => {
               throw new Error(mediaResponse.message);
 
             }
+            queryClient.invalidateQueries(['media-data']);
             showToast('success', mediaResponse.message);
 
           } catch (error) {
