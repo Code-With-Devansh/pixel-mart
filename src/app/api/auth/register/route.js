@@ -1,7 +1,7 @@
 import { emailVerificationLink } from "@/email/emailVerificationLink";
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
-import { sendMail } from "@/lib/sendMail";
+import { sendEmailVerification } from "@/lib/sendMail";
 import {authSchema} from '@/lib/zodSchema';
 import UserModel from "@/models/User.model";
 import {z} from 'zod'
@@ -47,7 +47,7 @@ export async function POST(req){
         .sign(secret)
 
         // sending verification link to mail
-        await sendMail('Email Verification request from Pixel Mart', email, emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`))
+        await sendEmailVerification(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`, email, process.env.NEXT_PUBLIC_BASE_URL)
         return response(true, 200, "Registration Success, Please verify your email address. We have sent a verification link to your registered email address.")
     } catch (error) {
         return catchError(error);

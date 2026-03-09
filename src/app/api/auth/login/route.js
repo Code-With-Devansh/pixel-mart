@@ -2,7 +2,7 @@ import { emailVerificationLink } from "@/email/emailVerificationLink";
 import { otpEmail } from "@/email/otpEmail";
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, generateOTP, response } from "@/lib/helperFunction";
-import { sendMail } from "@/lib/sendMail";
+import { sendEmailVerification, sendOtpEmail } from "@/lib/sendMail";
 import { authSchema } from "@/lib/zodSchema";
 import OTPModel from "@/models/Otp.model";
 import UserModel from "@/models/User.model";
@@ -34,7 +34,9 @@ export async function POST(req) {
 
     //Check Credentials
     const { email, password } = validatedData.data;
-    const getUser = await UserModel.findOne({ deletedAt: null,email }).select('+password');
+    const getUser = await UserModel.findOne({ deletedAt: null, email }).select(
+      "+password",
+    );
     if (!getUser) {
       return response(
         false,
@@ -54,12 +56,8 @@ export async function POST(req) {
         .sign(secret);
 
       // sending verification link to mail
-      await sendMail(
-        "Email Verification request from Pixel Mart",
-        email,
-        emailVerificationLink(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`,
-        ),
+      await sendEmailVerification(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`, email, process.env.NEXT_PUBLIC_BASE_URL
       );
       return response(
         false,
@@ -76,25 +74,29 @@ export async function POST(req) {
         validatedData.error,
       );
     }
-    if(getUser.role ==='admin'){
-      return response(true, 200, 'Please Enter the Admin Login Code.');
+    if (getUser.role === "admin") {
+      return response(true, 200, "Please Enter the Admin Login Code.");
     }
     //OTP Generation
-    await OTPModel.deleteMany({email}); // deleting old otps
+    await OTPModel.deleteMany({ email }); // deleting old otps
     const otp = generateOTP();
     //store otp to database;
     const newOtpData = new OTPModel({
-        email, otp 
-    })
+      email,
+      otp,
+    });
     await newOtpData.save();
-    const otpEmailStatus = await sendMail('Your Login Verification Code', email, otpEmail(otp));
-    if(!otpEmailStatus.success){
-        return response(false, 400, 'Failed to send OTP.');
-
+    const otpEmailStatus = await sendOtpEmail(
+      otp,
+      email,
+      process.env.NEXT_PUBLIC_BASE_URL,
+    );
+    if (!otpEmailStatus.success) {
+      return response(false, 400, "Failed to send OTP.");
     }
-     return response(true, 200, 'OTP sent to your registered Email.')
-
+    return response(true, 200, "OTP sent to your registered Email.");
   } catch (error) {
+    console.log(error);
     return catchError(error);
   }
 }

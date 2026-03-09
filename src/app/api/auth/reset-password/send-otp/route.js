@@ -1,7 +1,7 @@
 import { otpEmail } from "@/email/otpEmail";
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, generateOTP, response } from "@/lib/helperFunction";
-import { sendMail } from "@/lib/sendMail";
+import { sendOtpEmail } from "@/lib/sendMail";
 import { authSchema } from "@/lib/zodSchema";
 import OTPModel from "@/models/Otp.model";
 import UserModel from "@/models/User.model";
@@ -28,8 +28,8 @@ export async function POST(request){
             email, otp
         })
         await newOtpData.save();
-        const otpSendStatus = await sendMail('Your Reset Password Code.', email, otpEmail(otp));
-        if(!otpSendStatus){
+        const otpEmailStatus = await sendOtpEmail(otp, email, process.env.NEXT_PUBLIC_BASE_URL);
+        if(!otpEmailStatus.success){
             return response(false, 500, 'failed to send email');
         }
         return response(true, 200, 'OTP sent Successfully.');
