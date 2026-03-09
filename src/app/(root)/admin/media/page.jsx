@@ -2,6 +2,7 @@
 import BreadCrumb from '@/components/application/admin/BreadCrumb'
 import Media from '@/components/application/admin/Media';
 import UploadMedia from '@/components/application/admin/UploadMedia'
+import ButtonLoading from '@/components/application/ButtonLoading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox';
@@ -104,7 +105,7 @@ const MediaPage = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className='pb-5'>
         {selectedMedia.length > 0 &&
           <div className='py-2 px-3 bg-violet-200 mb-2 rounded flex justify-between items-center'>
             <Label className='cursor-pointer'>
@@ -162,6 +163,10 @@ const MediaPage = () => {
               </div>
 
               </>
+        }
+        {
+          hasNextPage && 
+          <ButtonLoading type="button" className='cursor-pointer' loading={isFetching} onClick={()=>fetchNextPage()} text="Load More"/>
         }
       </CardContent>
     </Card>

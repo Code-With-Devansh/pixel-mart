@@ -1,5 +1,10 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Image from "next/image";
 import React from "react";
@@ -19,19 +24,18 @@ const Media = ({
   setSelectedMedia,
 }) => {
   const handleCheck = () => {
-    let newSelectedMedia = []
-    if(selectedMedia.includes(media._id)){
-      newSelectedMedia = selectedMedia.filter(m=>m!==media._id);
-    }else{
-      newSelectedMedia = [...selectedMedia, media._id] ;
+    let newSelectedMedia = [];
+    if (selectedMedia.includes(media._id)) {
+      newSelectedMedia = selectedMedia.filter((m) => m !== media._id);
+    } else {
+      newSelectedMedia = [...selectedMedia, media._id];
     }
     setSelectedMedia(newSelectedMedia);
-
   };
-  const handleCopyLink = async (url)=>{
+  const handleCopyLink = async (url) => {
     await navigator.clipboard.writeText(url);
-    showToast('success',  'Link Copied.')
-  }
+    showToast("success", "Link Copied.");
+  };
 
   return (
     <div className="border border-gray-200 dark:border-gray-800 relative group rounded">
@@ -46,37 +50,51 @@ const Media = ({
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <span className="w-7 h-7 flex items-center justify-center rounded-full bg-black/50 cursor-pointer">
-              <BsThreeDotsVertical color="#fff"/>
+              <BsThreeDotsVertical color="#fff" />
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" side="bottom" sideOffset={5}>
-                {deleteType === 'SD' &&
-                    <>
-                        <DropdownMenuItem className='cursor-pointer' asChild>
-                            <Link href={ADMIN_MEDIA_EDIT(media._id)}>
-                            <MdOutlineEdit/>
-                            Edit
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className='cursor-pointer' onClick={()=>handleCopyLink(media.secure_url)}>
-                            <IoIosLink/>
-                            Copy Link
-                        </DropdownMenuItem>
-                    </>
-                }
-                <DropdownMenuItem className='cursor-pointer text-green-500 hover:text-green-600' onClick={()=>handleDelete([media._id], 'RSD')}>
-                    <TbRestore color="green"/>
-                    Restore
+            {deleteType === "SD" && (
+              <>
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href={ADMIN_MEDIA_EDIT(media._id)}>
+                    <MdOutlineEdit />
+                    Edit
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className='cursor-pointer text-red-500' onClick={()=>handleDelete([media._id], deleteType)}>
-                    <LuTrash color="red"/>
-                    {deleteType === 'SD' ? 'Move to Trash':'Delete Permanently'}
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => handleCopyLink(media.secure_url)}
+                >
+                  <IoIosLink />
+                  Copy Link
                 </DropdownMenuItem>
+              </>
+            )}
+            {deleteType === "PD" && (
+              <DropdownMenuItem
+                className="cursor-pointer text-green-500 hover:text-green-600"
+                onClick={() => handleDelete([media._id], "RSD")}
+              >
+                <TbRestore color="green" />
+                Restore
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem
+              className="cursor-pointer text-red-500"
+              onClick={() => handleDelete([media._id], deleteType)}
+            >
+              <LuTrash color="red" />
+              {deleteType === "SD" ? "Move to Trash" : "Delete Permanently"}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <div className="w-full h-full absolute z-10 transition-all duration-150 ease-in group-hover:bg-black/30 cursor-pointer" onClick={handleCheck} ></div>
+      <div
+        className="w-full h-full absolute z-10 transition-all duration-150 ease-in group-hover:bg-black/30 cursor-pointer"
+        onClick={handleCheck}
+      ></div>
       <div className="overflow-hidden rounded">
         <Image
           src={media?.secure_url}

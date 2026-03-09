@@ -18,7 +18,7 @@ const BreadCrumb = ({ breadCrumbData }) => {
             return (
               <div key={index} className="flex">
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={data.href}>
+                  <BreadcrumbLink href={data.href} className={index === breadCrumbData.length - 1 ? "font-semibold" : ""}>
                     {data.label}
                   </BreadcrumbLink>
                 </BreadcrumbItem>

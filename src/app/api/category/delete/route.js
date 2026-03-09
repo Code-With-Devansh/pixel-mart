@@ -1,9 +1,8 @@
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
 import { isAuthenticated } from "@/lib/authentication";
-import MediaModel from "@/models/Media.model";
 import mongoose from "mongoose";
-import cloudinary from '@/lib/cloudinary';
+import CategoryModel from "@/models/Category.model";
 
 export async function PUT(req) {
   try {
@@ -18,20 +17,20 @@ export async function PUT(req) {
     if (!Array.isArray(ids) || ids.length === 0) {
       return response(false, 400, "Invalid or Empty id list.");
     }
-    const media = await MediaModel.find({ _id: { $in: ids } }).lean();
-    if (!media.length) {
+    const category = await CategoryModel.find({ _id: { $in: ids } }).lean();
+    if (!category.length) {
       return response(false, 404, "Data not found.");
     }
     if (!["SD", "RSD"].includes(deleteType)) {
       return response(false, 400, "Invalid Delete Operation.");
     }
     if (deleteType === "SD") {
-      await MediaModel.updateMany(
+      await CategoryModel.updateMany(
         { _id: { $in: ids } },
         { $set: { deletedAt: new Date().toISOString() } },
       );
     }else{
-        await MediaModel.updateMany(
+        await CategoryModel.updateMany(
           { _id: { $in: ids } },
           { $set: { deletedAt: null } },
         );
@@ -44,8 +43,6 @@ export async function PUT(req) {
 }
 
 export async function DELETE(req) {
-    const session = await mongoose.startSession()
-    session.startTransaction()
   try {
     const auth = await isAuthenticated("admin");
     if (!auth.isAuth) {
@@ -58,30 +55,18 @@ export async function DELETE(req) {
     if (!Array.isArray(ids) || ids.length === 0) {
       return response(false, 400, "Invalid or Empty id list.");
     }
-    const media = await MediaModel.find({ _id: { $in: ids } }).session(session).lean();
-    if (!media.length) {
+    const category = await CategoryModel.find({ _id: { $in: ids } }).lean();
+    if (!category.length) {
       return response(false, 404, "Data not found.");
     }
     if (deleteType !=='PD') {
       return response(false, 400, "Invalid Delete Operation.");
     }
-    await MediaModel.deleteMany({ _id: { $in: ids } }).session(session)
+    await CategoryModel.deleteMany({ _id: { $in: ids } })
 
-    // delete media from cloudinary.
-    const publicIds = media.map(m=>m.public_id)
-    try {
-      await cloudinary.api.delete_resources(publicIds)
-    } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      return catchError(error);
-    }
-    await session.commitTransaction();
-    session.endSession()
+
     return response(true, 200, 'Data deleted Permanently')
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     return catchError(error);
   }
 }
