@@ -3,7 +3,7 @@ import React from "react";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,7 +24,7 @@ const UpdatePassword = ({email}) => {
     const router = useRouter()
   const [loading, setLoading] = React.useState(false);
   const [passwordVisible, setPasswordVisible] = React.useState(false);
-  const formSchema = authSchema
+  const formSchema = zSchema
     .pick({
         email:true,
       password: true

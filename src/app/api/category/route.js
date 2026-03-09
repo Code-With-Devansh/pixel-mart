@@ -71,7 +71,8 @@ export async function GET(req){
         const totalCategories = await CategoryModel.countDocuments(matchQuery);
         return NextResponse.json({data:categoryData, meta: {
             totalRowCount: totalCategories,
-        }})
+
+        },success:true})
 
     } catch (error) {
         return catchError(error); 

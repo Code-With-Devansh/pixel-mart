@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
 import { isAuthenticated } from "@/lib/authentication";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import CategoryModel from "@/models/Category.model";
 
 export async function PUT(req) {
@@ -12,7 +12,7 @@ export async function PUT(req) {
     }
     await connectDB();
     const payload = await req.json();
-    const schema = authSchema.pick({
+    const schema = zSchema.pick({
       _id:true,
       slug: true,
       name: true,

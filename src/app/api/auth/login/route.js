@@ -3,7 +3,7 @@ import { otpEmail } from "@/email/otpEmail";
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, generateOTP, response } from "@/lib/helperFunction";
 import { sendEmailVerification, sendOtpEmail } from "@/lib/sendMail";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import OTPModel from "@/models/Otp.model";
 import UserModel from "@/models/User.model";
 import { SignJWT } from "jose";
@@ -15,7 +15,7 @@ export async function POST(req) {
     const payload = await req.json();
 
     //validate the Payload
-    const validationSchema = authSchema
+    const validationSchema = zSchema
       .pick({
         email: true,
       })

@@ -2,7 +2,7 @@ import { otpEmail } from "@/email/otpEmail";
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, generateOTP, response } from "@/lib/helperFunction";
 import { sendOtpEmail } from "@/lib/sendMail";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import OTPModel from "@/models/Otp.model";
 import UserModel from "@/models/User.model";
 
@@ -10,7 +10,7 @@ export async function POST(request){
     try {
         await connectDB();
         const payload = await request.json();
-        const validationSchema = authSchema.pick({
+        const validationSchema = zSchema.pick({
             email:true
         })
         const validatedData = validationSchema.safeParse(payload);

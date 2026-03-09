@@ -3,14 +3,14 @@
 
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import UserModel from "@/models/User.model";
 
 export async function PUT(req) {
     try {
         await connectDB();
         const payload = await req.json();
-        const validationSchema = authSchema.pick({
+        const validationSchema = zSchema.pick({
             email:true,password: true
         })
         const validatedData = validationSchema.safeParse(payload);

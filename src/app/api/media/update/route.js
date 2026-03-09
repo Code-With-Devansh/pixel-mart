@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
 import { isAuthenticated } from "@/lib/authentication";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import MediaModel from "@/models/Media.model";
 import { isValidObjectId } from "mongoose";
 
@@ -15,7 +15,7 @@ export async function PUT(req) {
 
     const payload = await req.json();
     
-    const schema = authSchema.pick({
+    const schema = zSchema.pick({
         _id:true,
         alt:true,
         title:true

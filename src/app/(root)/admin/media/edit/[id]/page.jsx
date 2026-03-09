@@ -11,7 +11,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from '@/components/ui/input';
-import { authSchema } from '@/lib/zodSchema';
+import { zSchema } from '@/lib/zodSchema';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ButtonLoading from '@/components/application/ButtonLoading';
@@ -42,7 +42,7 @@ const EditMedia = ({params}) => {
   const {data: mediaData} =  useFetch(`/api/media/get/${id}`)
   const [loading, setLoading] = useState(false);
 
-  const formSchema = authSchema
+  const formSchema = zSchema
     .pick({
       _id: true,
       alt:true,

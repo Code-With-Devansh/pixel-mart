@@ -5,7 +5,7 @@ import logo from "$/public/assets/images/logo-black.png";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import darkLogo from '$/public/assets/images/logo-white.png'
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -26,7 +26,7 @@ import { showToast } from "@/lib/showToast";
 const Register = () => {
   const [loading, setLoading] = React.useState(false);
   const [passwordVisible, setPasswordVisible] = React.useState(false);
-  const formSchema = authSchema
+  const formSchema = zSchema
     .pick({
       email: true, password: true
     }).extend({

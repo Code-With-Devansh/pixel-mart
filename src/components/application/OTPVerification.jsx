@@ -1,4 +1,4 @@
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import ButtonLoading from "./ButtonLoading";
@@ -16,7 +16,7 @@ import { showToast } from "@/lib/showToast";
 import axios from "axios";
 const OTPVerification = ({ email, onSubmit, loading, setOtpEmail }) => {
   const [isResendingOtp, setIsresendingOtp] = useState(false);
-  const formSchema = authSchema.pick({
+  const formSchema = zSchema.pick({
     otp: true,
     email: true,
   });

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const authSchema = z.object({
+export const zSchema = z.object({
   email: z
     .string()
     .email("Invalid email address"),
@@ -23,5 +23,31 @@ export const authSchema = z.object({
     .trim()
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name cannot exceed 50 characters"),
-  slug:z.string().min(3, "slug is required."),
+  slug: z
+    .string()
+    .min(3)
+    .max(100)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format"),
+
+  category: z
+    .string()
+    .min(1, "Category is required"),
+
+  mrp: z.union([
+    z.number().positive("MRP must be greater than 0"),
+    z.string().transform((val)=>Number.parseFloat(val)).refine((val)=>!isNaN(val) && val>=0, "MRP must be a number"), 
+  ]),
+
+  sellingPrice: z.union([
+    z.number().positive("MRP must be greater than 0"),
+    z.string().transform((val)=>Number.parseFloat(val)).refine((val)=>!isNaN(val) && val>=0, "MRP must be a number"), 
+  ]),
+  discountPercentage: z.union([
+    z.number().positive("MRP must be greater than 0"),
+    z.string().transform((val)=>Number.parseFloat(val)).refine((val)=>!isNaN(val) && val>=0, "MRP must be a number"), 
+  ]),
+  description: z
+    .string()
+    .min(10, "Description too short")
+    .max(5000),
 });

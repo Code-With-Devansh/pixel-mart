@@ -2,7 +2,7 @@ import { emailVerificationLink } from "@/email/emailVerificationLink";
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
 import { sendEmailVerification } from "@/lib/sendMail";
-import {authSchema} from '@/lib/zodSchema';
+import {zSchema} from '@/lib/zodSchema';
 import UserModel from "@/models/User.model";
 import {z} from 'zod'
 import { SignJWT } from "jose";
@@ -11,7 +11,7 @@ export async function POST(req){
     try {
         await connectDB()
         //validating input
-        const validationSchema = authSchema.pick({
+        const validationSchema = zSchema.pick({
             email: true,
             password: true
         }).extend({

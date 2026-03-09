@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/DBconnect";
 import { catchError, response } from "@/lib/helperFunction";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import OTPModel from "@/models/Otp.model";
 import UserModel from "@/models/User.model";
 import { SignJWT } from "jose";
@@ -10,7 +10,7 @@ export async function POST(req) {
   try {
     await connectDB();
     const payload = await req.json();
-    const validationSchema = authSchema.pick({
+    const validationSchema = zSchema.pick({
       otp: true,
       email: true,
     });

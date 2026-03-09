@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import  slugify  from "slugify";
@@ -30,7 +30,7 @@ const AddCategory = () => {
     { href: ADMIN_CATEGORY_SHOW, label: "Category" },
     { href: "", label: "Add Category" },
   ];
-  const formSchema = authSchema.pick({
+  const formSchema = zSchema.pick({
     slug:true, name:true
   });
 

@@ -6,7 +6,7 @@ import logo from "$/public/assets/images/logo-black.png";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authSchema } from "@/lib/zodSchema";
+import { zSchema } from "@/lib/zodSchema";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -37,7 +37,7 @@ const LoginPage = () => {
   const [OTPVerificationLoading, setOTPVerificationLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = React.useState(false);
   const [otpEmail, setOtpEmail] = useState("")
-  const formSchema = authSchema
+  const formSchema = zSchema
     .pick({
       email: true,
     })
