@@ -27,6 +27,7 @@ import axios from "axios";
 import useFetch from "@/hooks/useFetch";
 import Select from "@/components/application/select";
 import Editor from "@/components/application/admin/Editor";
+import MediaModal from "@/components/application/admin/MediaModal";
 const AddProduct = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const { data: getCategoryData } = useFetch(
@@ -44,6 +45,8 @@ const AddProduct = () => {
   }, [getCategoryData]);
 
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState([]);
   const breadCrumbData = [
     { href: ADMIN_DASHBOARD, label: "Home" },
     { href: ADMIN_PRODUCT_SHOW, label: "Products" },
@@ -267,7 +270,14 @@ const AddProduct = () => {
                   )}
                 />
               </div>
+              <div className="border border-dashed mb-3 rounded p-5 text-center">
+
+                <div onClick={()=>setOpen(true)} className="bg-gray-50 dark:bg-card border w-50 mx-auto p-5 cursor-pointer">
+                  <span className="font-semibold">Select Media</span>
+                </div>
+              </div>
             </FieldGroup>
+            
             <div>
               <ButtonLoading
                 className="w-full cursor-pointer"
@@ -279,6 +289,7 @@ const AddProduct = () => {
           </form>
         </CardContent>
       </Card>
+                      <MediaModal open={open} setOpen={setOpen} selectedMedia={selectedMedia} setSelectedMedia={setSelectedMedia} isMultiple={true}/>
     </div>
   );
 };
