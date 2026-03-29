@@ -1,3 +1,5 @@
+import { Chip } from "@mui/material"
+
 export const DT_CATEGORY_COLUMN = [
     {
         accessorKey:'name',
@@ -37,7 +39,6 @@ export const DT_PRODUCT_COLUMN = [
     },
 
 ]
-
 export const DT_PRODUCT_VARIANT_COLUMN = [
     {
         accessorKey:'product',
@@ -69,5 +70,29 @@ export const DT_PRODUCT_VARIANT_COLUMN = [
         accessorKey:'discountPercentage',
         header:'Discount (%)'
     },
-
 ]
+export const DT_COUPON_COLUMN = [
+    {
+        accessorKey:'code',
+        header:'Coupon Code'
+
+    
+    },
+    {
+        accessorKey:'discountPercentage',
+        header:'Discount (%)'
+    },
+    {
+        accessorKey:'minShoppingAmount',
+        header:'Minimum Shopping Amount'
+    },
+    {
+        accessorKey:'validity',
+        header:'Validity',
+        Cell:({row})=>{
+            let date = new Date(row.original.validity)
+            return new Date() >  date? <Chip color="error" label={date.toLocaleDateString(';en-IN')}/> : <Chip color="success" label={date.toLocaleDateString('en-IN')}/>
+        }
+    },
+]
+  

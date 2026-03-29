@@ -69,7 +69,6 @@ const AddCoupon = () => {
         throw new Error(response.message);
       }
       form.reset();
-      setSelectedMedia([]);
       showToast("success", response.message);
     } catch (error) {
       showToast("error", error.message);
