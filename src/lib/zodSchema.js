@@ -46,8 +46,23 @@ export const zSchema = z.object({
     z.number().positive("MRP must be greater than 0"),
     z.string().transform((val)=>Number.parseFloat(val)).refine((val)=>!isNaN(val) && val>=0, "MRP must be a number"), 
   ]),
+  code: z
+    .string()
+    .min(3, "Coupon code must be at least 3 characters")
+    .max(20, "Coupon code cannot exceed 20 characters")
+    .regex(/^[A-Z0-9]+$/, "Coupon code must contain only uppercase letters and numbers"),
+  minShoppingAmount: z.union([
+    z.number().min(0, "Minimum shopping amount cannot be negative"),
+    z.string().transform((val)=>Number.parseFloat(val)).refine((val)=>!isNaN(val) && val>=0, "Minimum shopping amount must be a number"), 
+  ]),
+  validity: z.coerce.date(),
   description: z
     .string()
     .min(10, "Description too short")
     .max(5000),
+  media: z.array(z.string()),
+  product: z.string().min(1, "Product is required"),
+  sku: z.string().min(1, "SKU is required"),
+  color: z.string().min(1, "Color is required"),
+  size: z.string().min(1, "Size is required"),
 });

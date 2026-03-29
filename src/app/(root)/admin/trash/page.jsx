@@ -10,7 +10,7 @@ import DatatableWrapper from '@/components/application/admin/DatatableWrapper';
 import { columnConfig } from '@/lib/helperFunction';
 import EditAction from '@/components/application/admin/EditAction';
 import DeleteAction from '@/components/application/admin/DeleteAction';
-import { DT_CATEGORY_COLUMN } from '@/lib/column';
+import { DT_CATEGORY_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN } from '@/lib/column';
 import { useSearchParams } from 'next/navigation';
 
 const TRASH_CONFIG = {
@@ -20,8 +20,22 @@ const TRASH_CONFIG = {
     fetchUrl:'/api/category', 
     exportUrl:'/api/category/export',
     deleteUrl:'/api/category/delete',
-    
-  }
+  },
+  product:{
+    title:"Product Trash",
+    columns:DT_PRODUCT_COLUMN,
+    fetchUrl:'/api/product', 
+    exportUrl:'/api/product/export',
+    deleteUrl:'/api/product/delete',
+  },
+  "product-variant":{
+    title:"Product Variant Trash",
+    columns:DT_PRODUCT_VARIANT_COLUMN,
+    fetchUrl:'/api/product-variant', 
+    exportUrl:'/api/product-variant/export',
+    deleteUrl:'/api/product-variant/delete',
+  },
+
 }
 const breadCrumbData = [
     {href:ADMIN_DASHBOARD, label:'Home'},

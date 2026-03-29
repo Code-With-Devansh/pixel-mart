@@ -8,6 +8,8 @@ import {
   ADMIN_DASHBOARD,
   ADMIN_MEDIA_SHOW,
   ADMIN_PRODUCT_SHOW,
+  ADMIN_PRODUCT_VARIANT_EDIT,
+  ADMIN_PRODUCT_VARIANT_SHOW,
 } from "@/routes/AdminPanelRoute";
 import React, { useEffect, useState } from "react";
 import {
@@ -29,58 +31,53 @@ import Select from "@/components/application/select";
 import Editor from "@/components/application/admin/Editor";
 import MediaModal from "@/components/application/admin/MediaModal";
 import Image from "next/image";
+import { sizes } from "@/lib/utils";
 const AddProduct = () => {
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const { data: getCategoryData } = useFetch(
-    "/api/category?deleteType=SD&size=10000",
+  const [productOptions, setproductOptions] = useState([]);
+  const { data: getProduct } = useFetch(
+    "/api/product?deleteType=SD&size=10000",
   );
   useEffect(() => {
-    if (getCategoryData && getCategoryData.success) {
-      const data = getCategoryData.data;
-      const options = data.map((category) => ({
-        label: category.name,
-        value: category._id,
+    if (getProduct && getProduct.success) {
+      const data = getProduct.data;
+      const options = data.map((product) => ({
+        label: product.name,
+        value: product._id,
       }));
-      setCategoryOptions(options);
+      setproductOptions(options);
     }
-  }, [getCategoryData]);
+  }, [getProduct]);
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const breadCrumbData = [
     { href: ADMIN_DASHBOARD, label: "Home" },
-    { href: ADMIN_PRODUCT_SHOW, label: "Products" },
-    { href: "", label: "Add Product" },
+    { href: ADMIN_PRODUCT_VARIANT_SHOW, label: "Products" },
+    { href: "", label: "Add Product Variant" },
   ];
   const formSchema = zSchema.pick({
-    slug: true,
-    category: true,
+    product: true,
+    sku: true,
+    color: true,
+    size: true,
     mrp: true,
     sellingPrice: true,
-    discountPercentage: true,
-    description: true,
-    name: true,
+      discountPercentage: true,
   });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      slug: "",
-      category: "",
-      mrp: 0,
-      sellingPrice: 0,
-      discountPercentage: 0,
-      description: "",
-      name: "",
+    product:"",
+    sku:"",
+    color:"",
+    size:"",
+    mrp:"",
+    sellingPrice:"",
+    discountPercentage:"",
     },
   });
-  useEffect(() => {
-    const name = form.getValues("name");
-    if (name) {
-      form.setValue("slug", slugify(name).toLowerCase());
-    }
-  }, [form.watch("name")]);
   useEffect(() => {
     const mrp = form.getValues("mrp") || 0;
     const sellingPrice = form.getValues("sellingPrice") || 0;
@@ -89,7 +86,7 @@ const AddProduct = () => {
       form.setValue("discountPercentage", discountPercentage.toFixed(2), {
         shouldDirty: true,
       });
-    }else{
+    } else {
       form.setValue("discountPercentage", 0, {
         shouldDirty: true,
       });
@@ -104,7 +101,7 @@ const AddProduct = () => {
       const mediaIds = selectedMedia.map((media) => media._id);
       values.media = mediaIds;
       const { data: response } = await axios.post(
-        "/api/product/create",
+        "/api/product-variant/create",
         values,
       );
       if (!response.success) {
@@ -119,16 +116,12 @@ const AddProduct = () => {
       setLoading(false);
     }
   };
-  const editor = (event, editor) => {
-    const data = editor.getData();
-    form.setValue("description", data, { shouldDirty: true });
-  };
   return (
     <div>
       <BreadCrumb breadCrumbData={breadCrumbData} />
       <Card className="py-0 rounded shadow-sm ">
         <CardHeader className="pt-3 px-3 border-b [.border-b]:pb-2">
-          <h4 className="text-xl font-semibold">Add Product</h4>
+          <h4 className="text-xl font-semibold">Add Product Variant</h4>
         </CardHeader>
         <CardContent className="pb-5">
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -136,18 +129,41 @@ const AddProduct = () => {
               <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
                 <div className="mb-3">
                   <Controller
-                    name="name"
+                    name="product"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="alt">
-                          Name <span className="text-red-500">*</span>
+                        <FieldLabel htmlFor="product">
+                          Product <span className="text-red-500">*</span>
+                        </FieldLabel>
+                        <Select
+                          options={productOptions}
+                          selected={field.value}
+                          setSelected={field.onChange}
+                          isMulti={false}
+                          placeholder="Select a product"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
+                <div className="mb-3">
+                  <Controller
+                    name="sku"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="sku">
+                          SKU <span className="text-red-500">*</span>
                         </FieldLabel>
                         <Input
                           {...field}
-                          id="name"
+                          id="sku"
                           type="text"
-                          placeholder="Enter category name"
+                          placeholder="Enter SKU"
                           aria-invalid={fieldState.invalid}
                         />
                         {fieldState.invalid && (
@@ -159,18 +175,18 @@ const AddProduct = () => {
                 </div>
                 <div className="mb-3">
                   <Controller
-                    name="slug"
+                    name="color"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor="title">
-                          slug<span className="text-red-500">*</span>
+                          color<span className="text-red-500">*</span>
                         </FieldLabel>
                         <Input
                           {...field}
-                          id="slug"
+                          id="color"
                           type="text"
-                          placeholder="Enter slug"
+                          placeholder="Enter color"
                           aria-invalid={fieldState.invalid}
                         />
                         {fieldState.invalid && (
@@ -182,19 +198,19 @@ const AddProduct = () => {
                 </div>
                 <div className="mb-3">
                   <Controller
-                    name="category"
+                    name="size"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="category">
-                          Category <span className="text-red-500">*</span>
+                        <FieldLabel htmlFor="title">
+                          Size<span className="text-red-500">*</span>
                         </FieldLabel>
                         <Select
-                          options={categoryOptions}
+                          options={sizes}
                           selected={field.value}
                           setSelected={field.onChange}
                           isMulti={false}
-                          placeholder="Select a category"
+                          placeholder="Select a product"
                         />
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
@@ -203,6 +219,7 @@ const AddProduct = () => {
                     )}
                   />
                 </div>
+
                 <div className="mb-3">
                   <Controller
                     name="mrp"
@@ -275,23 +292,6 @@ const AddProduct = () => {
                   />
                 </div>
               </div>
-              <div className="mb-3">
-                <Controller
-                  name="description"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="description">
-                        Description<span className="text-red-500">*</span>
-                      </FieldLabel>
-                      <Editor onChange={editor} initialData={field.value} />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
               {selectedMedia.length > 0 && (
                 <div className="flex justify-center items-center flex-wrap mb-3 gap-2">
                   {selectedMedia.map((media) => (
@@ -325,7 +325,7 @@ const AddProduct = () => {
               <ButtonLoading
                 className="w-full cursor-pointer"
                 type="submit"
-                text="Add Product"
+                text="Add Product Variant"
                 loading={loading}
               />
             </div>
