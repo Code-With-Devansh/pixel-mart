@@ -1,5 +1,6 @@
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Chip } from "@mui/material"
-
+import userIcon from '$/public/assets/images/user.png'
 export const DT_CATEGORY_COLUMN = [
     {
         accessorKey:'name',
@@ -91,7 +92,44 @@ export const DT_COUPON_COLUMN = [
         header:'Validity',
         Cell:({row})=>{
             let date = new Date(row.original.validity)
-            return new Date() >  date? <Chip color="error" label={date.toLocaleDateString(';en-IN')}/> : <Chip color="success" label={date.toLocaleDateString('en-IN')}/>
+            return new Date() >  date? <Chip color="error" label={date.toLocaleDateString('en-IN')}/> : <Chip color="success" label={date.toLocaleDateString('en-IN')}/>
+        }
+    },
+]
+  
+export const DT_CUSTOMERS_COLUMN = [
+    {
+        accessorKey:'avatar',
+        header:'Avatar',
+        Cell: ({row})=>{
+            return <Avatar>
+                <AvatarImage src={row.original.url || userIcon.src} alt={row.original.name}/>
+            </Avatar> 
+        }
+
+    
+    },
+    {
+        accessorKey:'name',
+        header:'Name'
+    },
+    {
+        accessorKey:'email',
+        header:'Email'
+    },
+    {
+        accessorKey:'phone',
+        header:'Phone'
+    },
+    {
+        accessorKey:'address',
+        header:'Address'
+    },
+    {
+        accessorKey:'isEmailVerified',
+        header:'is Verified',
+        Cell: ({row})=>{
+            return row.original.isEmailVerified ? <Chip color="success" label="Verified"/> : <Chip color="error" label="Not Verified"/>
         }
     },
 ]

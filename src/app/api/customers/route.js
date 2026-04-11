@@ -1,9 +1,10 @@
 import { connectDB } from "@/lib/DBconnect";
 import { isAuthenticated } from "@/lib/authentication";
 import { catchError, response } from "@/lib/helperFunction";
-import CouponModel from "@/models/Coupon.model";
-import ProductModel from "@/models/Product.model";
+import UserModel from "@/models/User.model";
+
 import { NextResponse } from "next/server";
+import { is } from "zod/v4/locales";
 
 export async function GET(req) {
   try {
@@ -28,38 +29,18 @@ export async function GET(req) {
     }
     if (globalFilter) {
       matchQuery.$or = [
-        { code: { $regex: globalFilter, $options: "i" } },
-
-        {
-            $expr:{
-                $regexMatch: {
-                    input: {$toString: "$minShoppingAmount"},
-                    regex: globalFilter,
-                    options: "i"
-                }
-            }
-        },
-        {
-            $expr:{
-                $regexMatch: {
-                    input: {$toString: "$discountPercentage"},
-                    regex: globalFilter,
-                    options: "i"
-                }
-            }
-        },
-        { "categoryData.name": { $regex: globalFilter, $options: "i" } }
+        { name: { $regex: globalFilter, $options: "i" } },
+        
+        { email: { $regex: globalFilter, $options: "i" } },
+        { phone: { $regex: globalFilter, $options: "i" } },
+        { address: { $regex: globalFilter, $options: "i" } },
+        { isEmailVerified: { $regex: globalFilter, $options: "i" } },
+        
+        
       ];
     }
     filters.forEach((filter) => {
-        if(filter.id === 'minShoppingAmount' || filter.id === 'discountPercentage'){
-            matchQuery[filter.id] = Number(filter.value);
-
-        }else if(filter.id === 'validity'){
-            matchQuery[filter.id] = new Date(filter.value)
-        }else{
-            matchQuery[filter.id] = { $regex: filter.value, $options: "i" };
-        }
+        matchQuery[filter.id] = { $regex: filter.value, $options: "i" };        
     });
 
     let sortQuery = {};
@@ -88,22 +69,25 @@ export async function GET(req) {
       {
         $project: {
           _id: 1,
-          code: 1,
-          validity: 1,
-          minShoppingAmount: 1,
-          discountPercentage: 1,
+          name: 1, 
+          email: 1,
+          phone:1,
+          address:1,
+          isEmailVerified:1,
+          avatar:1,
+          isEmailVerified:1,
           createdAt: 1,
           deletedAt: 1,
           updatedAt: 1,
         },
       },
     ];
-    const getCoupons = await CouponModel.aggregate(aggregationPipeline);
-    const totalCoupons = await CouponModel.countDocuments(matchQuery);
+    const getCustomers = await UserModel.aggregate(aggregationPipeline);
+    const totalRowCount = await UserModel.countDocuments(matchQuery);
     return NextResponse.json({
-      data: getCoupons,
+      data: getCustomers,
       meta: {
-        totalRowCount: totalCoupons,
+        totalRowCount: totalRowCount,
       },
       success: true,
     });

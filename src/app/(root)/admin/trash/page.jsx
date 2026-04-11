@@ -1,16 +1,12 @@
 'use client'
-import { ADMIN_CATEGORY_ADD, ADMIN_CATEGORY_EDIT, ADMIN_CATEGORY_SHOW, ADMIN_DASHBOARD, ADMIN_TRASH_VIEW } from '@/routes/AdminPanelRoute'
+import { ADMIN_DASHBOARD, ADMIN_TRASH_VIEW } from '@/routes/AdminPanelRoute'
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import React, { useCallback, useMemo } from 'react'
 import BreadCrumb from '@/components/application/admin/BreadCrumb';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { FiPlus } from 'react-icons/fi';
 import DatatableWrapper from '@/components/application/admin/DatatableWrapper';
 import { columnConfig } from '@/lib/helperFunction';
-import EditAction from '@/components/application/admin/EditAction';
 import DeleteAction from '@/components/application/admin/DeleteAction';
-import { DT_CATEGORY_COLUMN, DT_COUPON_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN } from '@/lib/column';
+import { DT_CATEGORY_COLUMN, DT_COUPON_COLUMN, DT_CUSTOMERS_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN } from '@/lib/column';
 import { useSearchParams } from 'next/navigation';
 
 const TRASH_CONFIG = {
@@ -42,6 +38,14 @@ const TRASH_CONFIG = {
     exportUrl:'/api/coupon/export',
     deleteUrl:'/api/coupon/delete',
   },
+  customers:{
+    title:"Customer Trash",
+    columns:DT_CUSTOMERS_COLUMN,
+    fetchUrl:'/api/customers', 
+    exportUrl:'/api/customers/export',
+    deleteUrl:'/api/customers/delete',
+  },
+
 
 }
 const breadCrumbData = [
