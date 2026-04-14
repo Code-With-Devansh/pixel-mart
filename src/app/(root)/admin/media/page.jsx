@@ -88,12 +88,12 @@ const MediaPage = () => {
     <>
     <BreadCrumb breadCrumbData={breadCrumbData}/>
     <Card className="py-0 rounded shadow-sm ">
-      <CardHeader className="pt-3 px-3 border-b [.border-b]:pb-2">
+      <CardHeader className="pt-3 px-1 md:px-3 border-b [.border-b]:pb-2">
         <div className='flex justify-between items-center'>
           <h4 className='font-semibold text-xl uppercase'>{
             deleteType === 'SD'?selectedMedia.length==0?"Media":`${selectedMedia.length} item(s) Selected`:"Trash"
         }</h4>
-          <div className='flex text-center gap-5'>
+          <div className='flex text-center md:gap-5 gap-1'>
             {deleteType === 'SD' && <UploadMedia isMultiple={true} queryClient={queryClient}/>}
             <div className='flex gap-3'>
               {deleteType==='SD'?

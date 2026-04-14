@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 function Avatar({
   className,
   size = "default",
+  children,
   ...props
 }) {
   return (
@@ -18,7 +19,10 @@ function Avatar({
         "group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6",
         className
       )}
-      {...props} />
+      {...props}
+    >
+      {children}
+    </AvatarPrimitive.Root>
   );
 }
 

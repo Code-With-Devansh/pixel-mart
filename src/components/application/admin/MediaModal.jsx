@@ -13,6 +13,7 @@ import loading from "$/public/assets/images/loading.svg";
 import axios from "axios";
 import { ModalMediaBlock } from "./ModalMediaBlock";
 import { showToast } from "@/lib/showToast";
+import ButtonLoading from "../ButtonLoading";
 const MediaModal = ({
   open,
   setOpen,
@@ -53,22 +54,25 @@ const MediaModal = ({
     },
   });
   const [previouslySelected, setPreviouslySelected] = useState([]);
-
+  React.useEffect(() => {
+    if (open) {
+      setPreviouslySelected(selectedMedia);
+    }
+  }, [open]);
   const handleClear = () => {
-    setSelectedMedia([])
-    setPreviouslySelected([])
-    showToast('success', 'Media selection cleared.')
+    setSelectedMedia([]);
+    setPreviouslySelected([]);
+    showToast("success", "Media selection cleared.");
   };
   const handleSelect = () => {
-    if(selectedMedia.length  <=0){
-      return showToast('error', 'please Select a Media')
+    if (selectedMedia.length <= 0) {
+      return showToast("error", "please Select a Media");
     }
-    setPreviouslySelected(selectedMedia)
-    setOpen(false)
-
+    setPreviouslySelected(selectedMedia);
+    setOpen(false);
   };
   const handleClose = () => {
-    setSelectedMedia(previouslySelected)
+    setSelectedMedia(previouslySelected);
     setOpen(false);
   };
 
@@ -130,7 +134,18 @@ const MediaModal = ({
             </>
           )}
         </div>
-
+          {hasNextPage ?
+          <div className="flex justify-center py-5">
+            <ButtonLoading
+              type='button'
+              onClick={()=>fetchNextPage()}
+              loading={isFetching}
+              text="Load More"
+            /> 
+          </div>
+          :
+          <p className="text-center py-5"> Nothing more to load
+          </p>}
         {/* Footer - pinned to bottom */}
         <div className="px-4 py-3 border-t shrink-0 flex items-center justify-between">
           <Button type="button" variant="destructive" onClick={handleClear}>

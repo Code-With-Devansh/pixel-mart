@@ -95,7 +95,7 @@ const EditCoupon = ({params}) => {
         <CardContent className="pb-5">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="mb-3">
                   <Controller
                     name="code"
